@@ -61,3 +61,7 @@ See `requirements.txt` for Python dependencies.
 ## License
 
 This academic project is available under the MIT License. See [LICENSE](LICENSE) for details.
+
+## Contact
+
+For usage questions or extension ideas, contact [@HarshavardhanKakarla](https://github.com/HarshavardhanKakarla) or open an issue in this repository.
