@@ -1,0 +1,15 @@
+minorenv/
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.vscode/
+
+# Local datasets and workout records
+*.npy
+*.csv
+
+# Locally trained model artifacts
+*.h5
+*.pkl
+model/
