@@ -1,62 +1,116 @@
 # Gym Analyse
 
-A machine learning project for analyzing gym exercises, including pose detection, exercise classification, rep counting, and workout analytics.
+**Real-time exercise recognition, repetition counting, and form feedback from webcam video.**
+
+Gym Analyse is an academic project that combines computer vision and machine learning to analyze basic workout movements. The app extracts pose landmarks from a webcam feed, classifies the movement, counts repetitions, and provides squat-form feedback. A Streamlit interface lets users control a session and review saved workout history.
 
 ## Features
 
-- **Pose Detection**: Real-time pose estimation using computer vision
-- **Exercise Classification**: ML model to classify different exercises
-- **Rep Counter**: Automatic counting of repetitions
-- **Form Analyzer**: Analyze exercise form for correctness
-- **Session Manager**: Track workout sessions and history
-- **Analytics**: Visualize workout data and progress
+- Pose estimation and landmark feature extraction with MediaPipe and OpenCV
+- Sequence classification for squats, pushups, pullups, and idle movement
+- Repetition counting with movement-cycle logic
+- Squat-form feedback based on pose angles
+- Session summaries with locally saved history
+- Session totals, repetition trends, and CSV export
 
 ## Architecture
 
 ![Gym exercise analysis architecture](Black%20and%20white%20arch.png)
 
-Webcam frames are captured with OpenCV, processed into pose landmarks and exercise features, then classified by the trained model. The resulting predictions feed rep counting and form analysis; Streamlit presents live feedback and session data is stored for analytics.
+OpenCV captures webcam frames, MediaPipe estimates pose landmarks, and the feature extractor prepares them for the trained bidirectional LSTM classifier. Predictions feed repetition counting and squat-form analysis. Streamlit displays live results and session summaries; saved sessions are read by the analytics tab.
 
-## UI Preview
+## Screenshots
 
-### Workout Session
+### Workout Session Screen
 
 ![AI Fitness Trainer session screen](screenshots/session.png)
 
-### Session Analytics
+### Session History Screen
 
 ![AI Fitness Trainer data screen](screenshots/data.png)
 
-## Installation
+## Technology Stack
 
-1. Clone the repository
-2. Create a virtual environment: `python -m venv minorenv`
-3. Activate the environment: `minorenv\Scripts\activate` (Windows)
-4. Install dependencies: `pip install -r requirements.txt`
+- Python 3.10
+- TensorFlow/Keras for sequence classification
+- MediaPipe and OpenCV for pose estimation and video capture
+- Streamlit for the application interface
+- NumPy, pandas, and scikit-learn for feature and data processing
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.10
+- A connected webcam for live exercise analysis
+- Local model files, described below
+
+### Install
+
+On Windows, run the included setup script, which creates `minorenv` and installs the project dependencies:
+
+```bat
+setup.bat
+```
+
+Or install manually in a virtual environment:
+
+```powershell
+py -3.10 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+On macOS or Linux, create and activate the environment with `python3.10 -m venv .venv` and `source .venv/bin/activate`, then install `requirements.txt`.
+
+### Model Files
+
+Trained model files are not included in this repository. Before starting the app, place both of these files in a local `model/` directory:
+
+```text
+model/exercise_model.h5
+model/scaler.pkl
+```
+
+To train a model instead, provide the training arrays `X.npy`, `y.npy`, `train_idx.npy`, and `test_idx.npy` in the project root, create the output directory with `mkdir model`, and run:
+
+```bash
+python train_model.py
+```
+
+The training script saves the model and scaler under `model/`. Datasets and generated model files are intentionally excluded from Git.
 
 ## Usage
 
-Run the main application:
+From the project directory, start the app:
+
 ```
 streamlit run app.py
 ```
 
-## Files
+The app opens in a browser. Use **Start** to begin webcam analysis, **Stop** to finish and review a session summary, and **Cancel** to discard the current session. Saved sessions appear in the **Data** tab and are stored locally in `sessions.csv`.
 
-- `app.py`: Main Streamlit application
-- `classifier.py`: Exercise classification model
-- `rep_counter.py`: Repetition counting logic
-- `form_analyzer.py`: Exercise form analysis
-- `analytics.py`: Data analytics and visualization
-- `train_model.py`: Model training script
-- Other utility files for pose detection, feature extraction, etc.
+## Project Structure
 
-Datasets, workout records, and locally trained model artifacts are excluded from Git.
-Train or provide a model locally before running model-dependent features.
+- `app.py`: Streamlit interface and webcam session flow
+- `feature_extractor.py`: Pose landmark features and joint angles
+- `classifier.py`: Model loading, prediction, and output filtering
+- `rep_counter.py`: Repetition state and cycle counting
+- `form_analyzer.py`: Squat-form feedback
+- `pose_draw.py`: Pose overlay rendering
+- `session_manager.py`: Session utilities and workout-log persistence
+- `analytics.py`: Workout analytics utilities
+- `train_model.py`: Bidirectional LSTM training pipeline
+- `screenshots/`: README screenshots
+
+## Data and Limitations
+
+Workout history, datasets, and trained model artifacts stay local and are excluded from Git. Session history is written to `sessions.csv` in the working directory. The current form-feedback implementation analyzes squats; exercise recognition and rep counts depend on the locally supplied model and training data. This project is an academic prototype, not a medical or professional coaching tool.
 
 ## Requirements
 
-See `requirements.txt` for Python dependencies.
+Dependencies are listed in [`requirements.txt`](requirements.txt).
 
 ## License
 
@@ -64,4 +118,4 @@ This academic project is available under the MIT License. See [LICENSE](LICENSE)
 
 ## Contact
 
-For usage questions or extension ideas, contact [@HarshavardhanKakarla](https://github.com/HarshavardhanKakarla) or open an issue in this repository.
+For usage questions or extension ideas, contact [@HarshavardhanKakarla](https://github.com/HarshavardhanKakarla) or [open an issue](https://github.com/HarshavardhanKakarla/Fitness-Monitoring/issues).
